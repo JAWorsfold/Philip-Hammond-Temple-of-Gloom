@@ -37,6 +37,14 @@ public class Explorer {
      */
     public void explore(ExplorationState state) {
         //TODO:
+
+        //USEFUL METHODS:
+        //long state.getCurrentLocation(): return a unique identifier for the tile the explorer is currently on
+        //int state.getDistanceToTarget(): return the distance from the explorers current location to the Orb
+        //Collection<NodeStatus> getNeighbours(): return information about the tiles to which the explorer can move from their current location
+        //void moveTo(long id): move the explorer to the tile with ID id. This fails if that tile is not adjacent to the current location.
+
+
     }
 
     /**
@@ -64,5 +72,14 @@ public class Explorer {
      */
     public void escape(EscapeState state) {
         //TODO: Escape from the cavern before time runs out
+
+        //USEFUL METHODS:
+        //Node getCurrentNode(): return the Node corresponding to the explorers location
+        //Node getExit(): return the Node corresponding to the exit to the cavern (the destination).
+        //Collection<Node> getVertices(): return a collection of all traversable nodes in the graph.
+        //int getTimeRemaining(): return the number of steps the explorer has left before the ceiling collapses.
+        //void moveTo(Node n): move the explorer to node n. this will fail if the given node is not adjacent to the explorers current location. Calling this function will decrement the time remaining.
+        //void pickUpGold(): collect all gold on the current tile. This will fail if there is no gold on the current tile or it has already been collected.
+
     }
 }
