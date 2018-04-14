@@ -2,6 +2,7 @@ package student;
 
 import game.EscapeState;
 import game.ExplorationState;
+import game.NodeStatus;
 
 public class Explorer {
 
@@ -41,8 +42,23 @@ public class Explorer {
         //USEFUL METHODS:
         //long state.getCurrentLocation(): return a unique identifier for the tile the explorer is currently on
         //int state.getDistanceToTarget(): return the distance from the explorers current location to the Orb
-        //Collection<NodeStatus> getNeighbours(): return information about the tiles to which the explorer can move from their current location
-        //void moveTo(long id): move the explorer to the tile with ID id. This fails if that tile is not adjacent to the current location.
+        //Collection<NodeStatus> state.getNeighbours(): return information about the tiles to which the explorer can move from their current location
+        //void state.moveTo(long id): move the explorer to the tile with ID id. This fails if that tile is not adjacent to the current location.
+
+        System.out.println(state.getCurrentLocation());
+        System.out.println(state.getDistanceToTarget());
+
+        long start = state.getCurrentLocation();
+        int i = 0;
+
+        while (i < 25) {
+            for (NodeStatus x : state.getNeighbours()) {
+                System.out.println(x.getId());
+                System.out.println(x.getDistanceToTarget());
+                state.moveTo(x.getId());
+            }
+            i++;
+        }
 
 
     }
