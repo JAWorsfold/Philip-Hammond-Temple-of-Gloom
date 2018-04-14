@@ -7,6 +7,7 @@ import game.NodeStatus;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Stack;
 
 public class Explorer {
 
@@ -50,8 +51,8 @@ public class Explorer {
         //void state.moveTo(long id): move the explorer to the tile with ID id. This fails if that tile is not adjacent to the current location.
 
         ArrayList<Long> explored = new ArrayList<>(); // List of ID's I've been too
+        Stack<Long> route = new Stack<>();
         explored.add(state.getCurrentLocation());
-        int stepBackCount = 1;
         while (!(state.getDistanceToTarget() == 0)) { // keep exploring until the orb is reached
             ArrayList<NodeStatus> nodes = new ArrayList<>();
             for (NodeStatus node : state.getNeighbours()) {
@@ -65,9 +66,10 @@ public class Explorer {
                 NodeStatus node = nodes.get(0);
                 state.moveTo(node.getId());
                 explored.add(node.getId());
+                route.add(node.getId());
             } else {
-                state.moveTo(explored.get(explored.size() - stepBackCount));
-                stepBackCount++; // doesn't work as stepBack will pick a location I can't reach
+                route.pop();
+                state.moveTo(route.peek());
             }
         }
     }
