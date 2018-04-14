@@ -4,6 +4,8 @@ import game.EscapeState;
 import game.ExplorationState;
 import game.NodeStatus;
 
+import java.util.ArrayList;
+
 public class Explorer {
 
     /**
@@ -48,19 +50,29 @@ public class Explorer {
         System.out.println(state.getCurrentLocation());
         System.out.println(state.getDistanceToTarget());
 
-        long start = state.getCurrentLocation();
-        int i = 0;
+        ArrayList<Long> explored = new ArrayList<>();
+        long start = state.getCurrentLocation(); // never go to this location
 
-        while (i < 25) {
-            for (NodeStatus x : state.getNeighbours()) {
-                System.out.println(x.getId());
-                System.out.println(x.getDistanceToTarget());
-                state.moveTo(x.getId());
+        while (!(state.getDistanceToTarget() == 0)) { // keep exploring until the orb is reached
+            // make two dimensional array and iterate to decide where to go, which has the lowest distance to target
+            //!(list.contains(item))
+            int shortestDistance = -1;
+            long shortestDistanceID = -1;
+            for (NodeStatus node: state.getNeighbours()) {
+                int nodeDistance = node.getDistanceToTarget();
+                long nodeID = node.getId();
+                if (shortestDistance == -1) {
+                    shortestDistance = nodeDistance;
+                    shortestDistanceID = nodeID;
+                }
+                if (nodeDistance < shortestDistance) {
+                    shortestDistance = nodeDistance;
+                    shortestDistanceID = nodeID;
+                }
             }
-            i++;
+            state.moveTo(shortestDistanceID);
+            explored.add(shortestDistanceID);
         }
-
-
     }
 
     /**
