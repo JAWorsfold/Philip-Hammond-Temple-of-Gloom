@@ -50,24 +50,28 @@ public class Explorer {
         System.out.println(state.getCurrentLocation());
         System.out.println(state.getDistanceToTarget());
 
-        ArrayList<Long> explored = new ArrayList<>();
+        ArrayList<Long> explored = new ArrayList<>(); // List of ID's I've been too
+        ArrayList<NodeStatus> discovered = new ArrayList<>(); // List of discovered nodes in order of when discovered
         long start = state.getCurrentLocation(); // never go to this location
 
         while (!(state.getDistanceToTarget() == 0)) { // keep exploring until the orb is reached
             // make two dimensional array and iterate to decide where to go, which has the lowest distance to target
             //!(list.contains(item))
+            //&& !explored.contains(nodeID)
             int shortestDistance = -1;
             long shortestDistanceID = -1;
             for (NodeStatus node: state.getNeighbours()) {
                 int nodeDistance = node.getDistanceToTarget();
                 long nodeID = node.getId();
-                if (shortestDistance == -1) {
-                    shortestDistance = nodeDistance;
-                    shortestDistanceID = nodeID;
-                }
-                if (nodeDistance < shortestDistance) {
-                    shortestDistance = nodeDistance;
-                    shortestDistanceID = nodeID;
+                if (!explored.contains(nodeID)) {
+                    if (shortestDistance == -1) {
+                        shortestDistance = nodeDistance;
+                        shortestDistanceID = nodeID;
+                    }
+                    if (nodeDistance < shortestDistance) {
+                        shortestDistance = nodeDistance;
+                        shortestDistanceID = nodeID;
+                    }
                 }
             }
             state.moveTo(shortestDistanceID);
