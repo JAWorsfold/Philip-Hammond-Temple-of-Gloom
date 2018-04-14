@@ -51,6 +51,7 @@ public class Explorer {
 
         ArrayList<Long> explored = new ArrayList<>(); // List of ID's I've been too
         explored.add(state.getCurrentLocation());
+        int stepBackCount = 2;
         while (!(state.getDistanceToTarget() == 0)) { // keep exploring until the orb is reached
             ArrayList<NodeStatus> nodes = new ArrayList<>();
             for (NodeStatus node : state.getNeighbours()) {
@@ -59,10 +60,20 @@ public class Explorer {
                     nodes.add(node);
                 }
             }
-            nodes.sort(NodeStatus::compareTo);
             if (nodes.size() > 0) {
+                nodes.sort(NodeStatus::compareTo);
                 NodeStatus node = nodes.get(0);
                 state.moveTo(node.getId());
+                explored.add(node.getId());
+                stepBackCount = 2;
+            } else {
+                for (long id : explored) {
+                    System.out.println(id);
+                }
+                System.out.println("break");
+                System.out.println(explored.get(explored.size()-stepBackCount));
+                state.moveTo(explored.get(explored.size()-stepBackCount));
+                stepBackCount++;
             }
 
 
