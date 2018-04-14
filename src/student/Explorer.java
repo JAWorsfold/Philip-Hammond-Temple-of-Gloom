@@ -51,12 +51,12 @@ public class Explorer {
 
         ArrayList<Long> explored = new ArrayList<>(); // List of ID's I've been too
         explored.add(state.getCurrentLocation());
-        int stepBackCount = 2;
+        int stepBackCount = 1;
         while (!(state.getDistanceToTarget() == 0)) { // keep exploring until the orb is reached
             ArrayList<NodeStatus> nodes = new ArrayList<>();
             for (NodeStatus node : state.getNeighbours()) {
                 long nodeID = node.getId();
-                if(!explored.contains(nodeID)) {
+                if (!explored.contains(nodeID)) {
                     nodes.add(node);
                 }
             }
@@ -65,41 +65,13 @@ public class Explorer {
                 NodeStatus node = nodes.get(0);
                 state.moveTo(node.getId());
                 explored.add(node.getId());
-                stepBackCount = 2;
             } else {
-                for (long id : explored) {
-                    System.out.println(id);
-                }
-                System.out.println("break");
-                System.out.println(explored.get(explored.size()-stepBackCount));
-                state.moveTo(explored.get(explored.size()-stepBackCount));
-                stepBackCount++;
+                state.moveTo(explored.get(explored.size() - stepBackCount));
+                stepBackCount++; // doesn't work as stepBack will pick a location I can't reach
             }
-
-
-
-//            long shortestDistanceID;
-//            for (NodeStatus node : state.getNeighbours()) {
-//                long nodeID = node.getId();
-//                int nodeDistance = node.g etDistanceToTarget();
-//                if (!explored.contains(nodeID)) {
-//                    if ( ) {
-//
-//                    }
-//                } else {
-//                    state.moveTo(shortestDistanceID)
-//                }
-//
-//                if (!explored.contains(nodeID)) {
-//                    if (nodeDistance < shortestDistance) {
-//                        shortestDistance = nodeDistance;
-//                        shortestDistanceID = nodeID;
-//                    }
-//                }
-//            }
-//            state.moveTo(shortestDistanceID);
         }
     }
+
 
     /**
      * Escape from the cavern before the ceiling collapses, trying to collect as much
