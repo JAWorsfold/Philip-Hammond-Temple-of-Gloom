@@ -5,6 +5,8 @@ import game.ExplorationState;
 import game.NodeStatus;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class Explorer {
 
@@ -47,35 +49,44 @@ public class Explorer {
         //Collection<NodeStatus> state.getNeighbours(): return information about the tiles to which the explorer can move from their current location
         //void state.moveTo(long id): move the explorer to the tile with ID id. This fails if that tile is not adjacent to the current location.
 
-        System.out.println(state.getCurrentLocation());
-        System.out.println(state.getDistanceToTarget());
-
         ArrayList<Long> explored = new ArrayList<>(); // List of ID's I've been too
-        ArrayList<NodeStatus> discovered = new ArrayList<>(); // List of discovered nodes in order of when discovered
-        long start = state.getCurrentLocation(); // never go to this location
-
+        explored.add(state.getCurrentLocation());
         while (!(state.getDistanceToTarget() == 0)) { // keep exploring until the orb is reached
-            // make two dimensional array and iterate to decide where to go, which has the lowest distance to target
-            //!(list.contains(item))
-            //&& !explored.contains(nodeID)
-            int shortestDistance = -1;
-            long shortestDistanceID = -1;
-            for (NodeStatus node: state.getNeighbours()) {
-                int nodeDistance = node.getDistanceToTarget();
+            ArrayList<NodeStatus> nodes = new ArrayList<>();
+            for (NodeStatus node : state.getNeighbours()) {
                 long nodeID = node.getId();
-                if (!explored.contains(nodeID)) {
-                    if (shortestDistance == -1) {
-                        shortestDistance = nodeDistance;
-                        shortestDistanceID = nodeID;
-                    }
-                    if (nodeDistance < shortestDistance) {
-                        shortestDistance = nodeDistance;
-                        shortestDistanceID = nodeID;
-                    }
+                if(!explored.contains(nodeID)) {
+                    nodes.add(node);
                 }
             }
-            state.moveTo(shortestDistanceID);
-            explored.add(shortestDistanceID);
+            nodes.sort(NodeStatus::compareTo);
+            if (nodes.size() > 0) {
+                NodeStatus node = nodes.get(0);
+                state.moveTo(node.getId());
+            }
+
+
+
+//            long shortestDistanceID;
+//            for (NodeStatus node : state.getNeighbours()) {
+//                long nodeID = node.getId();
+//                int nodeDistance = node.g etDistanceToTarget();
+//                if (!explored.contains(nodeID)) {
+//                    if ( ) {
+//
+//                    }
+//                } else {
+//                    state.moveTo(shortestDistanceID)
+//                }
+//
+//                if (!explored.contains(nodeID)) {
+//                    if (nodeDistance < shortestDistance) {
+//                        shortestDistance = nodeDistance;
+//                        shortestDistanceID = nodeID;
+//                    }
+//                }
+//            }
+//            state.moveTo(shortestDistanceID);
         }
     }
 
