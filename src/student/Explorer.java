@@ -119,22 +119,20 @@ public class Explorer {
             unTraversedNodes.add(node);
         }
         while (!unTraversedNodes.isEmpty()) {
-            Entry<Node, Integer> minValue = null;
-            for (Entry<Node, Integer> entry : distances.entrySet()) {
-                if (minValue == null) {
-                    minValue = entry;
-                }
-                if (unTraversedNodes.contains(minValue)) {
-                    if (minValue.getValue() > entry.getValue()) {
-                        minValue = entry;
+            Node minValueKey = null;
+            int minValue = Integer.MAX_VALUE;
+            for (Node key : distances.keySet()) {
+                int value = distances.get(key);
+                if (unTraversedNodes.contains(key)) {
+                    if (value < minValue) {
+                        minValue = value;
+                        minValueKey = key;
                     }
                 }
             }
-            Node node = minValue.getKey();
+            Node node = minValueKey;
             unTraversedNodes.remove(node);
-            System.out.println("UnTraverse =" + unTraversedNodes.size());
             traversedNodes.add(node);
-            System.out.println("Traverse =" + traversedNodes.size());
             for (Node n : node.getNeighbours()) {
                 int alt = distances.get(node) + node.getEdge(n).length();
                 if (alt < distances.get(n)) {
