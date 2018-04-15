@@ -1,9 +1,6 @@
 package student;
 
-import game.EscapeState;
-import game.ExplorationState;
-import game.Node;
-import game.NodeStatus;
+import game.*;
 
 import java.util.*;
 import java.util.Map.*;
@@ -133,12 +130,30 @@ public class Explorer {
             Node node = minValueKey;
             unTraversedNodes.remove(node);
             traversedNodes.add(node);
+
             for (Node n : node.getNeighbours()) {
                 int alt = distances.get(node) + node.getEdge(n).length();
                 if (alt < distances.get(n)) {
                     distances.put(n, alt);
+                    routes.put(n, node);
+                    unTraversedNodes.add(n);
                 }
             }
+        }
+
+        LinkedList<Node> routeToTake = new LinkedList<>();
+        Node exit = state.getExit();
+        while (routes.get(exit) != null) {
+            exit = routes.get(exit);
+            routeToTake.add(exit);
+        }
+        Collections.reverse(routeToTake);
+        for (Node move : routeToTake) {
+            if (state.getCurrentNode().getTile().getGold() > 0) {
+                state.pickUpGold();
+
+            }
+            state.moveTo(move);
         }
     }
 }
