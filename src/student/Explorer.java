@@ -41,16 +41,9 @@ public class Explorer {
      * @param state the information available at the current state
      */
     public void explore(ExplorationState state) {
-        //TODO:
-
-        //USEFUL METHODS:
-        //long state.getCurrentLocation(): return a unique identifier for the tile the explorer is currently on
-        //int state.getDistanceToTarget(): return the distance from the explorers current location to the Orb
-        //Collection<NodeStatus> state.getNeighbours(): return information about the tiles to which the explorer can move from their current location
-        //void state.moveTo(long id): move the explorer to the tile with ID id. This fails if that tile is not adjacent to the current location.
 
         ArrayList<Long> explored = new ArrayList<>(); // List of ID's I've been too
-        Stack<Long> route = new Stack<>();
+        Stack<Long> route = new Stack<>(); // Exact route I've taken will be stored in a Stack
         explored.add(state.getCurrentLocation());
         while (!(state.getDistanceToTarget() == 0)) { // keep exploring until the orb is reached
             ArrayList<NodeStatus> nodes = new ArrayList<>();
@@ -72,7 +65,6 @@ public class Explorer {
             }
         }
     }
-
 
     /**
      * Escape from the cavern before the ceiling collapses, trying to collect as much
@@ -98,68 +90,10 @@ public class Explorer {
      * @param state the information available at the current state
      */
     public void escape(EscapeState state) {
-        //TODO: Escape from the cavern before time runs out
-//
-//        System.out.println(state.getCurrentNode().getId());
-//        System.out.println(state.getExit().getId());
-//        System.out.println(state.getTimeRemaining());
-//        Collection<Node> vertices = state.getVertices();
-//        for (Node vert : vertices) {
-//            System.out.println(vert.getId());
-//            System.out.println(vert.getTile());
-//            System.out.println(vert.getNeighbours());
-//            //System.out.println(vert.getEdge());
-//            System.out.println(vert.getExits());
-//        }
-
 
         // Use Dijkastra's algorithm to find the shortest path and save this to a list of Nodes. Traverse the list of nodes in order to exit
         // Then Do the same as above but to the nearest gold over a certain amount (not the most in case it is too far, adjust over time)
         // Do both in turn and make sure that the shortest path is always within the time limit to exit the cavern.
-
-        //USEFUL METHODS:
-        //Node getCurrentNode(): return the Node corresponding to the explorers location
-        //Node getExit(): return the Node corresponding to the exit to the cavern (the destination).
-        //Collection<Node> getVertices(): return a collection of all traversable nodes in the graph.
-        //int getTimeRemaining(): return the number of steps the explorer has left before the ceiling collapses.
-        //void moveTo(Node n): move the explorer to node n. this will fail if the given node is not adjacent to the explorers current location. Calling this function will decrement the time remaining.
-        //void pickUpGold(): collect all gold on the current tile. This will fail if there is no gold on the current tile or it has already been collected.
-
-        // Thanks to wikipedia page on Dijkstra algorithm for initial outline.
-        Collection<Node> cavern = state.getVertices();
-        Node source = state.getCurrentNode();
-
-        HashSet<Node> traversedNodes = new HashSet<>();
-        HashMap<Node, Integer> distances = new HashMap<>();
-        distances.put(source, 0);
-        for (Node node : cavern) {
-            if (!node.equals(source)) {
-                distances.put(node, Integer.MAX_VALUE);
-            }
-            traversedNodes.add(node);
-        }
-        while (!traversedNodes.isEmpty()) {
-            Entry<Node, Integer> minValue = null;
-            for (Entry<Node, Integer> entry : distances.entrySet()) {
-                if (minValue == null || minValue.getValue() > entry.getValue()) {
-                    minValue = entry;
-                }
-            }
-            Node node = minValue.getKey();
-            traversedNodes.remove(node);
-            for (Node n : node.getNeighbours()) {
-                int alt = distances.get(node) + node.getEdge(n).length();
-                if (alt < distances.get(n)) {
-                    distances.put(n, alt);
-                }
-            }
-        }
-        for (Node n : traversedNodes) {
-            System.out.println(n.getId());
-        }
-
-
-
 
         // while my nodePath to exit is < timeRemaining. do...
         // do the algorithm for finding nearest gold over a certain amount, go to it, pick it up
@@ -168,6 +102,45 @@ public class Explorer {
 
         // is nodePath is equal to timeRemaining, follow it.
 
+        // Thanks to wikipedia page on Dijkstra algorithm for initial outline.
+        Collection<Node> cavern = state.getVertices();
+        Node source = state.getCurrentNode();
 
+        HashSet<Node> traversedNodes = new HashSet<>();
+        HashSet<Node> unTraversedNodes = new HashSet<>();
+        HashMap<Node, Integer> distances = new HashMap<>();
+        HashMap<Node, Node> routes = new HashMap<>();
+        distances.put(source, 0);
+        unTraversedNodes.add(source);
+        for (Node node : cavern) {
+            if (!node.equals(source)) {
+                distances.put(node, Integer.MAX_VALUE);
+            }
+            unTraversedNodes.add(node);
+        }
+        while (!unTraversedNodes.isEmpty()) {
+            Entry<Node, Integer> minValue = null;
+            for (Entry<Node, Integer> entry : distances.entrySet()) {
+                if (minValue == null) {
+                    minValue = entry;
+                }
+                if (unTraversedNodes.contains(minValue)) {
+                    if (minValue.getValue() > entry.getValue()) {
+                        minValue = entry;
+                    }
+                }
+            }
+            Node node = minValue.getKey();
+            unTraversedNodes.remove(node);
+            System.out.println("UnTraverse =" + unTraversedNodes.size());
+            traversedNodes.add(node);
+            System.out.println("Traverse =" + traversedNodes.size());
+            for (Node n : node.getNeighbours()) {
+                int alt = distances.get(node) + node.getEdge(n).length();
+                if (alt < distances.get(n)) {
+                    distances.put(n, alt);
+                }
+            }
+        }
     }
 }
