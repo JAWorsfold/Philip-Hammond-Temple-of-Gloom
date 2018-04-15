@@ -3,7 +3,6 @@ package student;
 import game.*;
 
 import java.util.*;
-import java.util.Map.*;
 
 public class Explorer {
 
@@ -101,16 +100,16 @@ public class Explorer {
 
         // Thanks to wikipedia page on Dijkstra algorithm for initial outline.
         Collection<Node> cavern = state.getVertices();
-        Node source = state.getCurrentNode();
+        Node exit = state.getExit();
 
         HashSet<Node> traversedNodes = new HashSet<>();
         HashSet<Node> unTraversedNodes = new HashSet<>();
         HashMap<Node, Integer> distances = new HashMap<>();
         HashMap<Node, Node> routes = new HashMap<>();
-        distances.put(source, 0);
-        unTraversedNodes.add(source);
+        distances.put(exit, 0);
+        unTraversedNodes.add(exit);
         for (Node node : cavern) {
-            if (!node.equals(source)) {
+                if (!node.equals(exit)) {
                 distances.put(node, Integer.MAX_VALUE);
             }
             unTraversedNodes.add(node);
@@ -131,23 +130,22 @@ public class Explorer {
             unTraversedNodes.remove(node);
             traversedNodes.add(node);
 
-            for (Node n : node.getNeighbours()) {
-                int alt = distances.get(node) + node.getEdge(n).length();
-                if (alt < distances.get(n)) {
-                    distances.put(n, alt);
-                    routes.put(n, node);
-                    unTraversedNodes.add(n);
+            for (Node target : node.getNeighbours()) {
+                int alt = distances.get(node) + node.getEdge(target).length();
+                if (alt < distances.get(target)) {
+                    distances.put(target, alt);
+                    routes.put(target, node);
+                    unTraversedNodes.add(target);
                 }
             }
         }
 
         LinkedList<Node> routeToTake = new LinkedList<>();
-        Node exit = state.getExit();
-        while (routes.get(exit) != null) {
-            exit = routes.get(exit);
-            routeToTake.add(exit);
+        Node start = state.getCurrentNode();
+        while (routes.get(start) != null) {
+            start = routes.get(start);
+            routeToTake.add(start);
         }
-        Collections.reverse(routeToTake);
         for (Node move : routeToTake) {
             if (state.getCurrentNode().getTile().getGold() > 0) {
                 state.pickUpGold();
