@@ -5,10 +5,7 @@ import game.ExplorationState;
 import game.Node;
 import game.NodeStatus;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Stack;
+import java.util.*;
 
 public class Explorer {
 
@@ -101,25 +98,23 @@ public class Explorer {
      */
     public void escape(EscapeState state) {
         //TODO: Escape from the cavern before time runs out
-
-        System.out.println(state.getCurrentNode().getId());
-        System.out.println(state.getExit().getId());
-        System.out.println(state.getTimeRemaining());
-        Collection<Node> vertices = state.getVertices();
-        for (Node vert : vertices) {
-            System.out.println(vert.getId());
-            System.out.println(vert.getTile());
-            System.out.println(vert.getNeighbours());
-            //System.out.println(vert.getEdge());
-            System.out.println(vert.getExits());
-        }
+//
+//        System.out.println(state.getCurrentNode().getId());
+//        System.out.println(state.getExit().getId());
+//        System.out.println(state.getTimeRemaining());
+//        Collection<Node> vertices = state.getVertices();
+//        for (Node vert : vertices) {
+//            System.out.println(vert.getId());
+//            System.out.println(vert.getTile());
+//            System.out.println(vert.getNeighbours());
+//            //System.out.println(vert.getEdge());
+//            System.out.println(vert.getExits());
+//        }
 
 
         // Use Dijkastra's algorithm to find the shortest path and save this to a list of Nodes. Traverse the list of nodes in order to exit
-
         // Then Do the same as above but to the nearest gold over a certain amount (not the most in case it is too far, adjust over time)
         // Do both in turn and make sure that the shortest path is always within the time limit to exit the cavern.
-
 
         //USEFUL METHODS:
         //Node getCurrentNode(): return the Node corresponding to the explorers location
@@ -128,6 +123,33 @@ public class Explorer {
         //int getTimeRemaining(): return the number of steps the explorer has left before the ceiling collapses.
         //void moveTo(Node n): move the explorer to node n. this will fail if the given node is not adjacent to the explorers current location. Calling this function will decrement the time remaining.
         //void pickUpGold(): collect all gold on the current tile. This will fail if there is no gold on the current tile or it has already been collected.
+
+        // Thanks to wikipedia page on Dijkstra algorithm for initial outline.
+        Collection<Node> cavern = state.getVertices();
+        Node source = state.getCurrentNode();
+
+        HashSet<Node> traversedNodes = new HashSet<>();
+        HashMap<Node, Integer> distances = new HashMap<>();
+        distances.put(source, 0);
+        for (Node node : cavern) {
+            if (!node.equals(source)) {
+                distances.put(node, Integer.MAX_VALUE);
+            }
+            traversedNodes.add(node);
+        }
+        while (traversedNodes.size() > 0) {
+
+        }
+
+
+
+        // while my nodePath to exit is < timeRemaining. do...
+        // do the algorthm for finding nearest gold over a certain amount, go to it, pick it up
+        // every location, stop check if there is gold to pick up regardless
+        // then from the new location, recreate the map of shortest distance to exit.
+
+        // is nodePath is equal to timeRemaining, follow it.
+
 
     }
 }
