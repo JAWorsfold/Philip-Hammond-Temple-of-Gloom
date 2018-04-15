@@ -6,6 +6,7 @@ import game.Node;
 import game.NodeStatus;
 
 import java.util.*;
+import java.util.Map.*;
 
 public class Explorer {
 
@@ -137,14 +138,31 @@ public class Explorer {
             }
             traversedNodes.add(node);
         }
-        while (traversedNodes.size() > 0) {
-
+        while (!traversedNodes.isEmpty()) {
+            Entry<Node, Integer> minValue = null;
+            for (Entry<Node, Integer> entry : distances.entrySet()) {
+                if (minValue == null || minValue.getValue() > entry.getValue()) {
+                    minValue = entry;
+                }
+            }
+            Node node = minValue.getKey();
+            traversedNodes.remove(node);
+            for (Node n : node.getNeighbours()) {
+                int alt = distances.get(node) + node.getEdge(n).length();
+                if (alt < distances.get(n)) {
+                    distances.put(n, alt);
+                }
+            }
+        }
+        for (Node n : traversedNodes) {
+            System.out.println(n.getId());
         }
 
 
 
+
         // while my nodePath to exit is < timeRemaining. do...
-        // do the algorthm for finding nearest gold over a certain amount, go to it, pick it up
+        // do the algorithm for finding nearest gold over a certain amount, go to it, pick it up
         // every location, stop check if there is gold to pick up regardless
         // then from the new location, recreate the map of shortest distance to exit.
 
