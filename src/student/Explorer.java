@@ -2,6 +2,7 @@ package student;
 
 import game.EscapeState;
 import game.ExplorationState;
+import game.Node;
 import game.NodeStatus;
 
 import java.util.ArrayList;
@@ -60,7 +61,7 @@ public class Explorer {
                 if (!explored.contains(nodeID)) {
                     nodes.add(node);
                 }
-            }
+    }
             if (nodes.size() > 0) {
                 nodes.sort(NodeStatus::compareTo);
                 NodeStatus node = nodes.get(0);
@@ -100,6 +101,25 @@ public class Explorer {
      */
     public void escape(EscapeState state) {
         //TODO: Escape from the cavern before time runs out
+
+        System.out.println(state.getCurrentNode().getId());
+        System.out.println(state.getExit().getId());
+        System.out.println(state.getTimeRemaining());
+        Collection<Node> vertices = state.getVertices();
+        for (Node vert : vertices) {
+            System.out.println(vert.getId());
+            System.out.println(vert.getTile());
+            System.out.println(vert.getNeighbours());
+            //System.out.println(vert.getEdge());
+            System.out.println(vert.getExits());
+        }
+
+
+        // Use Dijkastra's algorithm to find the shortest path and save this to a list of Nodes. Traverse the list of nodes in order to exit
+
+        // Then Do the same as above but to the nearest gold over a certain amount (not the most in case it is too far, adjust over time)
+        // Do both in turn and make sure that the shortest path is always within the time limit to exit the cavern.
+
 
         //USEFUL METHODS:
         //Node getCurrentNode(): return the Node corresponding to the explorers location
